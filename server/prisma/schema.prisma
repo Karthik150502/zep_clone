@@ -1,0 +1,89 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique
+  firstname  String
+  lastname   String
+  password   String
+  avatarId   String?
+  role       Role     @default(user)
+  image      String?
+  created_at DateTime @default(now())
+
+  @@map("user")
+}
+
+model Space {
+  id        String  @id @unique @default(cuid())
+  name      String
+  width     Int
+  height    Int?
+  thumbnail String?
+
+  @@map("space")
+}
+
+model SpaceElements {
+  id        String @id @unique @default(cuid())
+  elementId String
+  spaceId   String
+  x         Int
+  y         Int
+
+  @@map("space_elements")
+}
+
+model Element {
+  id       String @id @unique @default(cuid())
+  width    Int
+  height   Int
+  imageUrl String
+
+  @@map("elements")
+}
+
+model Map {
+  id     String  @id @unique @default(cuid())
+  width  Int
+  height Int
+  name   String?
+
+  @@map("map")
+}
+
+model mapElements {
+  id        String  @id @unique @default(cuid())
+  mapId     String
+  elementId String?
+  x         Int?
+  y         Int?
+
+  @@map("map_elements")
+}
+
+model Avatar {
+  id       String  @id @unique @default(cuid())
+  imageUrl String?
+  name     String?
+
+  @@map("avatar")
+}
+
+enum Role {
+  admin
+  user
+}
