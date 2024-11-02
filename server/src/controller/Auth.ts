@@ -1,7 +1,9 @@
 import { Request, Response } from "express"
 import prisma from "../config/config.db"
 import jwt from "jsonwebtoken"
-import { hash, compare } from "bcrypt"
+import { hash } from "bcrypt"
+
+
 interface LoginPayload {
     username: string,
     password: string,
@@ -9,6 +11,8 @@ interface LoginPayload {
 interface SignupPayload {
     username: string,
     password: string,
+    firstname: string,
+    lastname: string,
 }
 
 export default class AuthController {

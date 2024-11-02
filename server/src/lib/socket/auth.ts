@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 
 
-const AuthWsMiddleWare = (tokenString: string) => {
+const AuthWsMiddleWare = (tokenString: string): jwt.JwtPayload | string | false => {
 
     const token = tokenString.split(" ")[1];
 
