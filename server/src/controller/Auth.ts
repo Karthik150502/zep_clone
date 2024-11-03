@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import prisma from "../config/config.db"
 import jwt from "jsonwebtoken"
-import { hash } from "bcrypt"
+import { compare, hash } from "bcrypt"
 
 
 interface LoginPayload {
@@ -32,8 +32,8 @@ export default class AuthController {
             )
 
             if (!findUser) {
-                res.json({
-                    status: 400,
+                res.status(403).json({
+                    status: 403,
                     message: "Incorrect Credentials, check the username."
                 })
                 return;
@@ -44,8 +44,8 @@ export default class AuthController {
             // let passwordMatch = await compare(body.password, findUser.password);
 
             // if (!passwordMatch) {
-            //     res.json({
-            //         status: 400,
+            //     res.status(403).json({
+            //         status: 403,
             //         message: "Incorrect Credentials, wrong password"
             //     })
             //     return;
@@ -62,7 +62,7 @@ export default class AuthController {
                 expiresIn: "365d"
             })
 
-            res.json({
+            res.status(200).json({
                 status: 200,
                 message: "Logged in successfully",
                 user: {
@@ -73,7 +73,7 @@ export default class AuthController {
             return;
         } catch (e) {
             console.log("Failed to login, ", e)
-            res.json({
+            res.status(200).json({
                 status: 500,
                 message: "Something went wrong, failed to log in, try again after some time.",
             })
@@ -96,7 +96,7 @@ export default class AuthController {
             )
 
             if (findUser) {
-                res.json({
+                res.status(400).json({
                     status: 400,
                     message: "User already exists, try other username."
                 })
@@ -115,10 +115,10 @@ export default class AuthController {
                 }
             })
 
-            res.json({
+            res.status(200).json({
                 status: 200,
                 message: "Signed up successfully",
-                user: newUser
+                userid: newUser.id
             })
             return;
         } catch (e) {

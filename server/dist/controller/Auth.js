@@ -27,16 +27,16 @@ class AuthController {
                     }
                 });
                 if (!findUser) {
-                    res.json({
-                        status: 400,
+                    res.status(403).json({
+                        status: 403,
                         message: "Incorrect Credentials, check the username."
                     });
                     return;
                 }
                 // let passwordMatch = await compare(body.password, findUser.password);
                 // if (!passwordMatch) {
-                //     res.json({
-                //         status: 400,
+                //     res.status(403).json({
+                //         status: 403,
                 //         message: "Incorrect Credentials, wrong password"
                 //     })
                 //     return;
@@ -48,7 +48,7 @@ class AuthController {
                 const token = jsonwebtoken_1.default.sign(JWTPayload, process.env.JWT_SECRET, {
                     expiresIn: "365d"
                 });
-                res.json({
+                res.status(200).json({
                     status: 200,
                     message: "Logged in successfully",
                     user: Object.assign(Object.assign({}, findUser), { token: `Bearer ${token}` })
@@ -57,7 +57,7 @@ class AuthController {
             }
             catch (e) {
                 console.log("Failed to login, ", e);
-                res.json({
+                res.status(200).json({
                     status: 500,
                     message: "Something went wrong, failed to log in, try again after some time.",
                 });
@@ -75,7 +75,7 @@ class AuthController {
                     }
                 });
                 if (findUser) {
-                    res.json({
+                    res.status(400).json({
                         status: 400,
                         message: "User already exists, try other username."
                     });
@@ -85,10 +85,10 @@ class AuthController {
                 let newUser = yield config_db_1.default.user.create({
                     data: Object.assign(Object.assign({}, body), { password: hashedPasword })
                 });
-                res.json({
+                res.status(200).json({
                     status: 200,
                     message: "Signed up successfully",
-                    user: newUser
+                    userid: newUser.id
                 });
                 return;
             }
